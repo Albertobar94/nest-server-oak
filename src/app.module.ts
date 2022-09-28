@@ -3,6 +3,7 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { StartupModule } from "./startup/startup.module";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { StartupModule } from "./startup/startup.module";
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
+    EventEmitterModule.forRoot(),
     StartupModule,
   ],
   controllers: [],

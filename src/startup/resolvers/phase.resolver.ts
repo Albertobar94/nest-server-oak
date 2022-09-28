@@ -63,6 +63,6 @@ export class PhaseResolver {
 
   @ResolveField(() => [TaskEntity], { name: "tasks" })
   getTasks(@Parent() phase: PhaseEntity) {
-    return this.taskService.getAllByStartupId(phase.startupId);
+    return this.taskService.getAllByPhaseId(phase.id);
   }
 }

@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
-import { Repositories } from "./repository";
-import { Resolvers } from "./resolvers";
 import { Services } from "./services";
+import { Resolvers } from "./resolvers";
+import { Listeners } from "./listeners";
+import { Repositories } from "./repository";
 
 @Module({
-  providers: [...Resolvers, ...Services, ...Repositories],
+  providers: [...Resolvers, ...Services, ...Listeners, ...Repositories],
 })
 export class StartupModule {}

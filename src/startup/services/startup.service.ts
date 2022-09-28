@@ -49,7 +49,7 @@ export class StartupService {
     const allPhases = await this.taskRepository.getAllByStartupId(id);
     await this.phaseRepository.delete(allPhases);
 
-    const allTasks = await this.taskRepository.getAllByStartupId(id);
+    const allTasks = await this.taskRepository.getAllByPhaseId(id);
     await this.taskRepository.delete(allTasks);
 
     return this.startupRepository.delete(id);

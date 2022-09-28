@@ -8,6 +8,7 @@ import { TaskEntity } from "../entities/task.entity";
 import { TaskRepository } from "../repository/task.repository";
 import { PhaseRepository } from "../repository/phase.repository";
 import { StartupRepository } from "../repository/startup.repository";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 type CreateTaskArgs = Omit<TaskEntity, "id" | "sequence" | "done">;
 
@@ -17,6 +18,7 @@ export class TaskService {
     private readonly taskRepository: TaskRepository,
     private readonly startupRepository: StartupRepository,
     private readonly phaseRepository: PhaseRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(data: CreateTaskArgs): Promise<TaskEntity[]> {
@@ -45,8 +47,8 @@ export class TaskService {
     return this.taskRepository.getById(id);
   }
 
-  async getAllByStartupId(id: string): Promise<TaskEntity[]> {
-    return this.taskRepository.getAllByStartupId(id);
+  async getAllByPhaseId(id: string): Promise<TaskEntity[]> {
+    return this.taskRepository.getAllByPhaseId(id);
   }
 
   async getAll(): Promise<TaskEntity[]> {
@@ -107,8 +109,21 @@ export class TaskService {
       throw new ConflictException("Previous phase must be marked as done");
     }
 
-    const updatedTask = TaskEntity.setDone(task);
-    return this.taskRepository.update(task.id, updatedTask);
+    const updatedTaskEntity = TaskEntity.setDone(task);
+    const updatedTask = await this.taskRepository.update(
+      task.id,
+      updatedTaskEntity,
+    );
+
+    const allTasks = await this.taskRepository.getAllByPhaseId(phase.id);
+    const allDoneTasksLength = allTasks.filter(
+      (task) => task.done === true,
+    ).length;
+    if (allTasks.length === allDoneTasksLength) {
+      this.eventEmitter.emit("phase.done", phase);
+    }
+
+    return updatedTask;
   }
 
   async setTaskUndone(id: string): Promise<TaskEntity[]> {

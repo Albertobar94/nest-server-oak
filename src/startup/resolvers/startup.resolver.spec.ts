@@ -1,4 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import { Services } from "../services";
 import { Repositories } from "../repository";
 import { StartupResolver } from "./startup.resolver";
@@ -8,6 +9,7 @@ describe("StartupResolver", () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [EventEmitterModule.forRoot()],
       providers: [StartupResolver, ...Services, ...Repositories],
     }).compile();
 
