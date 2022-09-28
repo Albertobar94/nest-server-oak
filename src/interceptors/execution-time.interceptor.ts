@@ -9,8 +9,8 @@ import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 
 @Injectable()
-export class executionTimeInterceptor implements NestInterceptor {
-  private readonly logger = new Logger(executionTimeInterceptor.name);
+export class ExecutionTimeInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(ExecutionTimeInterceptor.name);
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const now = Date.now();
