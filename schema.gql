@@ -1,0 +1,65 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TaskEntity {
+  id: UUID!
+  title: String!
+  sequence: Int!
+  phaseId: UUID!
+  startupId: UUID!
+  done: Boolean!
+}
+
+"""A simple UUID parser"""
+scalar UUID
+
+type PhaseEntity {
+  id: UUID!
+  title: String!
+  sequence: Int!
+  startupId: UUID!
+  done: Boolean!
+  tasks: [TaskEntity!]!
+}
+
+type StartupEntity {
+  id: UUID!
+  name: String!
+  progress: [PhaseEntity!]!
+}
+
+type Query {
+  startups: [StartupEntity!]!
+  startup(id: UUID!): [StartupEntity!]!
+  phase(id: UUID!): [PhaseEntity!]!
+  task(id: UUID!): [TaskEntity!]!
+}
+
+type Mutation {
+  createStartup(createStartupInput: CreateStartupDTO!): [StartupEntity!]!
+  removeStartup(id: UUID!): [StartupEntity!]!
+  createPhase(createPhaseInput: CreatePhaseDTO!): [PhaseEntity!]!
+  removePhase(id: UUID!): [PhaseEntity!]!
+  setPhaseDone(id: UUID!): [TaskEntity!]!
+  setPhaseUndone(id: UUID!): [PhaseEntity!]!
+  createTask(createTaskInput: CreateTaskDTO!): [TaskEntity!]!
+  removeTask(id: UUID!): [TaskEntity!]!
+  setTaskDone(id: UUID!): [TaskEntity!]!
+  setTaskUndone(id: UUID!): [TaskEntity!]!
+}
+
+input CreateStartupDTO {
+  name: String!
+}
+
+input CreatePhaseDTO {
+  title: String!
+  startupId: UUID!
+}
+
+input CreateTaskDTO {
+  title: String!
+  phaseId: UUID!
+  startupId: UUID!
+}
